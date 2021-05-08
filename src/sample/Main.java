@@ -6,6 +6,7 @@ import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -48,6 +49,7 @@ public class Main extends Application {
         VBox vBox = new VBox();
         StackPane stackPane = new StackPane(vBox);
         Scene scene = new Scene(stackPane, 600,600);
+        primaryStage.setTitle("Maze");
         primaryStage.setScene(scene);
         primaryStage.show();
         startGame(primaryStage, vBox, scene, stackPane);
@@ -84,6 +86,14 @@ public class Main extends Application {
                 try{
                     this.n = Integer.parseInt(xInput.getText());
                     this.m = Integer.parseInt(yInput.getText());
+                    if ((this.m == 1 || this.n == 1) || (this.m == 2 && this.n == 2)) {
+                        Alert alert = new Alert(Alert.AlertType.WARNING);
+                        alert.setTitle("Error");
+                        alert.setHeaderText("Invalid size");
+                        alert.setContentText("Maze does not generate 1 by n, n by 1, or 2 by 2 maze!");
+                        alert.showAndWait();
+                        throw new IllegalArgumentException();
+                    } if (this.m < 2 || this.n < 2) throw new IllegalArgumentException(); // 0,0 does not raise an error
                     this.width = (this.n >= this.m) ? 500.0/this.n : 500.0/this.m;
                     this.wallWidth = this.width / 10.0;
                     this.squares = new Region[this.m][this.n];
@@ -115,7 +125,7 @@ public class Main extends Application {
         Task<List<Integer>> task = new Task<>() {
                 @Override
                 protected List<Integer> call() {
-                    return maze.getWallPositon();
+                    return maze.getWallPosition();
                 }
             };
         task.setOnSucceeded(e -> {
@@ -125,6 +135,14 @@ public class Main extends Application {
         });
         new Thread(task).start();
         Label generatingLabel = new Label("Generating . . .");
+        Button button = new Button("BACK");
+        button.setOnMouseClicked(mouseEvent -> {
+            stackPane.getChildren().clear();
+            this.timeline.stop();
+            this.timeline.getKeyFrames().clear();
+            vBox1.getChildren().clear();
+            startGame(primaryStage, vBox1, scene, stackPane);
+        });
         generatingLabel.setFont(new Font(20));
         vBox1.getChildren().add(generatingLabel);
         AtomicInteger iter = new AtomicInteger();
@@ -141,10 +159,10 @@ public class Main extends Application {
                generatingLabel.setText("Generating .");
            }
            iter.getAndIncrement();
-            System.out.println("XTRYCTUH");
            if(iter.get() >= 10){
                Label msg = new Label("Please be patient!\nIf you generate a maze greater than 50 by 50,\nit could take a long time!");
                vBox1.getChildren().add(msg);
+               vBox1.getChildren().add(button);
            }
         });
         this.timeline.getKeyFrames().add(keyFrame);

@@ -6,6 +6,10 @@ Has 2 classes, **Maze** and **Test**.
 
 **Main** runs the game.
 
+## Important note
+
+Maze does not generate 1 by n, n by 1, or 2 by 2 maze!
+
 ## Maze.java
 
 Class that generates maze.
@@ -18,7 +22,7 @@ Class that generates maze.
 Maze maze = new Maze(n, m);
 ```
 
-Where it generates a CreateMaze object of dimensions n by m.
+Where it generates a Maze object of dimensions n by m.
 
 ```n``` by ```m``` is the same as ```x``` by ```y```.
 
@@ -123,10 +127,4 @@ Maze with previous route hidden.
 
 <img src="https://github.com/JosherLo/Maze/blob/master/Screenshots/maze3.png" alt="Maze solved" width=500 height=500/>
 
-Mazed solved
-
-## Note
-
-```diff
--Maze does not generate 1 by something or something by 1 or 2 by 2 maze!
-```
+Maze solved
