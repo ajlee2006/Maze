@@ -93,8 +93,7 @@ public class Main extends Application {
 //                        alert.setContentText("Maze does not generate 1 by n, n by 1, or 2 by 2 maze!");
 //                        alert.showAndWait();
 //                        throw new IllegalArgumentException();
-//                    }
-                    if (this.m < 1 || this.n < 1 || (this.m == 1 && this.n == 1)) throw new IllegalArgumentException(); // 0,0 does not raise an error
+//                    } if (this.m < 2 || this.n < 2) throw new IllegalArgumentException(); // 0,0 does not raise an error
                     this.width = (this.n >= this.m) ? 500.0/this.n : 500.0/this.m;
                     this.wallWidth = this.width / 10.0;
                     this.squares = new Region[this.m][this.n];
@@ -141,6 +140,7 @@ public class Main extends Application {
             stackPane.getChildren().clear();
             this.timeline.stop();
             this.timeline.getKeyFrames().clear();
+            task.cancel();
             vBox1.getChildren().clear();
             startGame(primaryStage, vBox1, scene, stackPane);
         });
@@ -242,7 +242,9 @@ public class Main extends Application {
         Rectangle bottomBorder = new Rectangle(500 + 2 * this.wallWidth, this.wallWidth);
         bottomBorder.setFill(this.wall);
         vBox.getChildren().add(bottomBorder);
-
+        vBox.setMinSize(520,520);
+        vBox.setPrefSize(520,520);
+        vBox.setMaxSize(520,520);
         vBox1.getChildren().add(vBox);
         vBox1.getChildren().add(initOptions(scene, primaryStage, vBox1, stackPane));
         vBox1.setSpacing(10);
